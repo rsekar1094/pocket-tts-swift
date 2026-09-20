@@ -62,7 +62,7 @@ extension TTSPipeline {
 
     /// The bundle directories `TTSPipeline.init` will look for at this dtype. Mimi is
     /// fp32 at every setting — see the note on `TTSPipeline`.
-    static func bundleFiles(dtype: String) -> [String] {
+    public static func bundleFiles(dtype: String) -> [String] {
         ["flowlm_\(dtype)_s\(Model.sMax).aimodel/",
          "flow_decoder_\(dtype)_lsd1.aimodel/",
          "mimi_decoder_float32_ring272_outer_q_gs.aimodel/"]

@@ -64,6 +64,12 @@ public struct HubProgress: Sendable {
     public var fraction: Double {
         totalBytes > 0 ? Double(completedBytes) / Double(totalBytes) : 0
     }
+
+    public init(path: String, completedBytes: Int64, totalBytes: Int64) {
+        self.path = path
+        self.completedBytes = completedBytes
+        self.totalBytes = totalBytes
+    }
 }
 
 public enum HubStore {

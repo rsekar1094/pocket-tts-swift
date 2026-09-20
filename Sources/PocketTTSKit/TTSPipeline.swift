@@ -182,9 +182,11 @@ public final class TTSPipeline {
     /// scope. Here the KV cache is per-chunk and the Mimi state per-run, so both are locals
     /// and prefill and the AR loop end up sharing a scope. A graph whose state lives as long
     /// as its owner can hold it in stored properties instead and split the calls up.
+    /// - Parameter onPCMFrame: Called after each 80 ms Mimi frame (~1920 samples @ 24 kHz) for streaming playback.
     public func synthesize(
         text: String, voice: VoiceState, seed: UInt64, applyGain: Bool,
-        log: (String) -> Void = { _ in }
+        log: (String) -> Void = { _ in },
+        onPCMFrame: (@Sendable ([Float]) -> Void)? = nil
     ) async throws -> SynthResult {
         var r = SynthResult()
         var noise = NoiseSource(seed: seed, temp: Model.temp)
@@ -317,6 +319,7 @@ public final class TTSPipeline {
                                               engineNanos: &mimiN, flattenNanos: &flatN)
                 r.engineCalls += 1
                 r.samples.append(contentsOf: pcm)
+                onPCMFrame?(pcm)
                 i += 1
             }
             cs.steps = i
@@ -343,6 +346,10 @@ public final class TTSPipeline {
             r.gainApplied = VoiceGain.apply(&r.samples, voice: voice.name)
         }
         return r
+    }
+
+    public var computeUnitSummary: String {
+        "flowLM=\(lmAsset.unit.rawValue) flow=\(flowAsset.unit.rawValue) mimi=\(mimiAsset.unit.rawValue)"
     }
 }
 #endif
