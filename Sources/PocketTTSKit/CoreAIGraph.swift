@@ -15,6 +15,7 @@ public enum TTSError: Error, CustomStringConvertible {
 #if canImport(CoreAI)
 import CoreAI
 
+@available(iOS 27.0, macOS 27.0, *)
 extension ComputeUnit {
     var options: SpecializationOptions {
         switch self {
@@ -33,6 +34,7 @@ extension ComputeUnit {
 /// functions share their KV cache through host-owned `NDArray`s handed over as
 /// `MutableViews`, so it is the buffers that carry the state across calls, not the
 /// `AIModel` identity.
+@available(iOS 27.0, macOS 27.0, *)
 public final class Asset {
     public let url: URL
     public let unit: ComputeUnit
@@ -60,10 +62,12 @@ public final class Asset {
 // MARK: - NDArray helpers
 
 /// Build a float32 NDArray from a Swift array.
+@available(iOS 27.0, macOS 27.0, *)
 public func nd(_ values: [Float], _ shape: [Int]) -> NDArray {
     NDArray(scalars: values, shape: shape)
 }
 
+@available(iOS 27.0, macOS 27.0, *)
 public func nd(_ values: [Int32], _ shape: [Int]) -> NDArray {
     NDArray(scalars: values, shape: shape)
 }
@@ -76,6 +80,7 @@ public func ndHalf(_ values: [Float], _ shape: [Int]) -> NDArray {
 }
 
 /// Allocate an NDArray of the given scalar type and fill it from float32 source data.
+@available(iOS 27.0, macOS 27.0, *)
 public func makeState(_ values: [Float], shape: [Int], half: Bool) -> NDArray {
     var a = NDArray(shape: shape, scalarType: half ? .float16 : .float32)
     if half {
@@ -93,6 +98,7 @@ public func makeState(_ values: [Float], shape: [Int], half: Bool) -> NDArray {
 }
 
 /// Flatten any float output to `[Float]`, row-major, widening fp16.
+@available(iOS 27.0, macOS 27.0, *)
 public func flat(_ array: NDArray) -> [Float] {
     switch array.scalarType {
     case .float16: return flatten(array, as: Float16.self)
@@ -133,6 +139,7 @@ private func flatten<T: BinaryFloatingPoint & BitwiseCopyable>(_ a: NDArray, as 
 }
 
 /// Pull one named output as `[Float]`, consuming it out of the `Outputs` bag.
+@available(iOS 27.0, macOS 27.0, *)
 public func take(_ outputs: inout InferenceFunction.Outputs, _ name: String) throws -> [Float] {
     guard let v = outputs.remove(name)?.ndArray else {
         throw TTSError.message("missing output '\(name)'")

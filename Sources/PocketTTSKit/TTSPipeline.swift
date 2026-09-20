@@ -68,6 +68,7 @@ import CoreAI
 /// rescale + quantizer moved in-graph with the `_q` Mimi asset), Mimi state hand-off, chunk
 /// concatenation (direct concat — upstream's `torch.cat`; the sweep measured every join
 /// an order of magnitude below in-audio signal motion, §16.5), and per-voice gain.
+@available(iOS 27.0, macOS 27.0, *)
 public final class TTSPipeline {
     public let lmAsset: Asset
     public let flowAsset: Asset

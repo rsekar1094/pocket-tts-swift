@@ -27,6 +27,7 @@ import Foundation
 /// Step (2) exercises the KV state written by (1); the three Mimi frames exercise the
 /// in-graph streaming state feeding back — so the dumps cover the mutable-state paths,
 /// not just the pure functions.
+@available(iOS 27.0, macOS 27.0, *)
 public enum GraphProbe {
     public static let seed: UInt64 = 20_260_813
 
