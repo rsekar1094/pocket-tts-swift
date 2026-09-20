@@ -25,8 +25,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "PocketTTSKit",
-            linkerSettings: [.linkedFramework("CoreAI")]
+            name: "PocketTTSKit"
         ),
         .executableTarget(
             name: "pocket-tts-cli",

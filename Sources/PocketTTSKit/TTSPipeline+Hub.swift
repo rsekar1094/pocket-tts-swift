@@ -9,6 +9,7 @@
 
 import Foundation
 
+@available(iOS 27.0, macOS 27.0, *)
 extension TTSPipeline {
 
     /// Resolve both pinned repositories and build a pipeline from them.
@@ -68,6 +69,7 @@ extension TTSPipeline {
     }
 }
 
+@available(iOS 27.0, macOS 27.0, *)
 extension TTSPipeline {
     /// Load one of the shipped voices from wherever this pipeline's weights came from.
     ///

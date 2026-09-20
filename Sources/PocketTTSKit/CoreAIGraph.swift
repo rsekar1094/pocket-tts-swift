@@ -75,6 +75,7 @@ public func nd(_ values: [Int32], _ shape: [Int]) -> NDArray {
 /// Build a float16 NDArray by narrowing float32 values. Used when the flow-LM / flow
 /// decoder assets are the fp16 export — the graph's declared input dtype must be matched
 /// exactly or the runtime rejects the call.
+@available(iOS 27.0, macOS 27.0, *)
 public func ndHalf(_ values: [Float], _ shape: [Int]) -> NDArray {
     NDArray(scalars: values.map { Float16($0) }, shape: shape)
 }
@@ -107,6 +108,7 @@ public func flat(_ array: NDArray) -> [Float] {
     }
 }
 
+@available(iOS 27.0, macOS 27.0, *)
 private func flatten<T: BinaryFloatingPoint & BitwiseCopyable>(_ a: NDArray, as _: T.Type) -> [Float] {
     let total = a.shape.reduce(1, *)
     var out = [Float](repeating: 0, count: total)
