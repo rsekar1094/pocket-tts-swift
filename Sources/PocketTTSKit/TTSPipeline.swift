@@ -1,4 +1,3 @@
-import CoreAI
 import Foundation
 
 /// Per-chunk telemetry from a synthesis run.
@@ -43,6 +42,9 @@ public struct SynthResult {
     public var durationSeconds: Double { Double(samples.count) / Double(Model.sampleRate) }
     public var rtf: Double { wallSeconds / max(durationSeconds, 1e-9) }
 }
+
+#if canImport(CoreAI)
+import CoreAI
 
 /// The production Swift host: everything the pipeline does that is *not* a graph.
 ///
@@ -342,3 +344,4 @@ public final class TTSPipeline {
         return r
     }
 }
+#endif

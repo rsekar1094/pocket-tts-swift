@@ -18,15 +18,14 @@ let package = Package(
     // iOS is a first-class consumer: the device bench harness depends on PocketTTSKit as
     // a local package. CoreAI ships in both the macOS 27 and iOS 27 SDKs (device-only on
     // iOS — the SDK has no simulator slice, so the library links only for real devices).
-    platforms: [.macOS("27.0"), .iOS("27.0")],
+    platforms: [.macOS("27.0"), .iOS("26.0")],
     products: [
         .library(name: "PocketTTSKit", targets: ["PocketTTSKit"]),
         .executable(name: "pocket-tts-cli", targets: ["pocket-tts-cli"]),
     ],
     targets: [
         .target(
-            name: "PocketTTSKit",
-            linkerSettings: [.linkedFramework("CoreAI")]
+            name: "PocketTTSKit"
         ),
         .executableTarget(
             name: "pocket-tts-cli",

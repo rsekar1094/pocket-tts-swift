@@ -1,14 +1,21 @@
-import CoreAI
 import Foundation
 
 /// Which compute unit a bundle is specialized for.
-///
-/// The porting rule (NOTES.md §8): parity runs may use `cpuOnly`, but anything timed
-/// must state a real preference — `cpu_only` is a reference-precision mode, never a
-/// benchmark configuration. On this Mac the GPU delegate is the bit-exact one.
 public enum ComputeUnit: String, Sendable, CaseIterable {
     case gpu, cpu, ane, cpuOnly, def
+}
 
+public enum TTSError: Error, CustomStringConvertible {
+    case message(String)
+    public var description: String { switch self { case .message(let m): return m } }
+}
+
+@inline(__always) public func nowNanos() -> UInt64 { clock_gettime_nsec_np(CLOCK_UPTIME_RAW) }
+
+#if canImport(CoreAI)
+import CoreAI
+
+extension ComputeUnit {
     var options: SpecializationOptions {
         switch self {
         case .gpu: return SpecializationOptions(preferredComputeUnitKind: .gpu)
@@ -19,13 +26,6 @@ public enum ComputeUnit: String, Sendable, CaseIterable {
         }
     }
 }
-
-public enum TTSError: Error, CustomStringConvertible {
-    case message(String)
-    public var description: String { switch self { case .message(let m): return m } }
-}
-
-@inline(__always) public func nowNanos() -> UInt64 { clock_gettime_nsec_np(CLOCK_UPTIME_RAW) }
 
 /// One loaded `.aimodel` bundle. Keeps the `AIModel` around and exposes `function(_:)`
 /// because the flow-LM asset is a **multifunction** package: `prefill` and `step` are two
@@ -76,11 +76,6 @@ public func ndHalf(_ values: [Float], _ shape: [Int]) -> NDArray {
 }
 
 /// Allocate an NDArray of the given scalar type and fill it from float32 source data.
-///
-/// This is how the KV state gets created: a *state* is a buffer the runtime mutates in
-/// place across calls; the host owns it, hands the runtime a mutable view each call, and
-/// never reads it back. Zero-initialised, not NaN — a masked SDPA still multiplies V by a
-/// zero weight and `0 * NaN` is `NaN` (NOTES.md §6, blocker iii-b).
 public func makeState(_ values: [Float], shape: [Int], half: Bool) -> NDArray {
     var a = NDArray(shape: shape, scalarType: half ? .float16 : .float32)
     if half {
@@ -144,6 +139,7 @@ public func take(_ outputs: inout InferenceFunction.Outputs, _ name: String) thr
     }
     return flat(v)
 }
+#endif
 
 // MARK: - metrics
 

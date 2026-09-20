@@ -1,3 +1,4 @@
+#if canImport(CoreAI)
 import CoreAI
 import Foundation
 
@@ -117,3 +118,4 @@ public enum GraphProbe {
             .write(to: outDir.appendingPathComponent("manifest.txt"), atomically: true, encoding: .utf8)
     }
 }
+#endif
